@@ -29,6 +29,7 @@
 /* USER CODE BEGIN Includes */
 #include "mylcd.h"
 #include "stdio.h"
+#include "GUI.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -80,6 +81,42 @@ void delay_us(uint16_t us)
 
     HAL_TIM_Base_Stop(&htim8);
 }
+
+void Test_Demo(void)
+{   
+     GUI_Init();
+     /* 设置字体 */   
+     GUI_SetFont(&GUI_Font8x16);
+     /* 设置背景颜色 */   
+     GUI_SetBkColor(GUI_BLUE);
+     GUI_Clear();      
+     /* 设置画笔的粗细以及颜色，只有矢量函数才能设置Size */
+     GUI_SetPenSize(10);   
+     GUI_SetColor(GUI_RED);
+     GUI_DrawLine(80, 10, 240, 90);   
+     GUI_DrawLine(80, 90, 240, 10);
+     GUI_SetBkColor(GUI_BLACK);
+     GUI_SetColor(GUI_WHITE);      
+     /* 设置正常模式 */
+     GUI_SetTextMode(GUI_TM_NORMAL);  
+     GUI_DispStringHCenterAt("GUI_TM_NORMAL" , 160, 10);
+     /* 翻转文本 */   
+     GUI_SetTextMode(GUI_TM_REV);
+     GUI_DispStringHCenterAt("GUI_TM_REV" , 160, 26);        
+     /* 透明文本 */
+     GUI_SetTextMode(GUI_TM_TRANS);   
+     GUI_DispStringHCenterAt("GUI_TM_TRANS" , 160, 42);
+     /* 异或文本 */   
+     GUI_SetTextMode(GUI_TM_XOR);
+     GUI_DispStringHCenterAt("GUI_TM_XOR" , 160, 58);   
+     /* 设置文本模式 */
+     GUI_SetTextMode(GUI_TM_TRANS | GUI_TM_REV);   
+     GUI_DispStringHCenterAt("GUI_TM_TRANS | GUI_TM_REV", 160, 74);
+     while (1)   
+     {
+         GUI_Delay(1000);   
+     }
+}
 /* USER CODE END 0 */
 
 /**
@@ -115,17 +152,30 @@ int main(void)
   MX_USART1_UART_Init();
   MX_TIM8_Init();
   /* USER CODE BEGIN 2 */
-	LCD_Init();           				//初始化LCD FSMC接口
-	POINT_COLOR=RED;     					//画笔颜色：红色
-	sprintf((char*)lcd_id,"LCD ID:%04X",lcddev.id);//将LCD ID打印到lcd_id数组。
-	LCD_Clear(WHITE); 
-	POINT_COLOR=RED;	  
-	 
-	LCD_ShowString(30,40,210,24,24,"ELITE STM32 ^_^");	
-	LCD_ShowString(30,70,200,16,16,"TFTLCD TEST");
-	LCD_ShowString(30,90,200,16,16,"ATOM@ALIENTEK");
-	LCD_ShowString(30,110,200,16,16,lcd_id);		//显示LCD ID	      					 
-	LCD_ShowString(30,130,200,12,12,"2019/9/27");	 
+	LCD_Init();           													//初始化LCD FSMC接口
+	sprintf((char*)lcd_id,"LCD ID:%04X",lcddev.id);	//将LCD ID打印到lcd_id数组。
+	//STemWin 移植
+	//GUI_Init();
+	//GUI_Clear();
+	//GUI_SetBkColor(GUI_BLUE);
+	//GUI_SetFont(GUI_FONT_24_1);
+	//GUI_DispStringAt("hello world",0,0);
+	//GUI_DispStringAt("hello world",50,50); 
+	//GUI_DispStringAt(lcd_id,50,100);
+	Test_Demo();	//STemWin  测试代码
+	
+	//原始的TFT驱动
+	//POINT_COLOR=RED;     					//画笔颜色：红色
+	//sprintf((char*)lcd_id,"LCD ID:%04X",lcddev.id);//将LCD ID打印到lcd_id数组。
+	//LCD_Clear(WHITE); 
+	//POINT_COLOR=RED;	  
+	// 
+	//LCD_ShowString(30,40,210,24,24,"ELITE STM32 ^_^");	
+	//LCD_ShowString(30,70,200,16,16,"TFTLCD TEST");
+	//LCD_ShowString(30,90,200,16,16,"ATOM@ALIENTEK");
+	//LCD_ShowString(30,110,200,16,16,lcd_id);		//显示LCD ID	      					 
+	//LCD_ShowString(30,130,200,12,12,"2019/9/27");	 
+	
   /* USER CODE END 2 */
 
   /* Infinite loop */
