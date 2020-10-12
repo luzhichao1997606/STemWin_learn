@@ -7,8 +7,8 @@ HeaderPath=..\Drivers\STM32F1xx_HAL_Driver\Inc;..\Drivers\STM32F1xx_HAL_Driver\I
 CDefines=USE_HAL_DRIVER;STM32F103xE;USE_HAL_DRIVER;USE_HAL_DRIVER;
 
 [PreviousGenFiles]
-HeaderPath=C:/Users/Â½ÖÇ³¬/Desktop/Project/Project8-STemWin_Learn/STemWin/Inc
+HeaderPath=C:/Users/Â½ÖÇ³¬/Desktop/Project/Project8-STemWin_Learn/STemWin_learn/Inc
 HeaderFiles=gpio.h;crc.h;fsmc.h;tim.h;usart.h;stm32f1xx_it.h;stm32f1xx_hal_conf.h;main.h;
-SourcePath=C:/Users/Â½ÖÇ³¬/Desktop/Project/Project8-STemWin_Learn/STemWin/Src
+SourcePath=C:/Users/Â½ÖÇ³¬/Desktop/Project/Project8-STemWin_Learn/STemWin_learn/Src
 SourceFiles=gpio.c;crc.c;fsmc.c;tim.c;usart.c;stm32f1xx_it.c;stm32f1xx_hal_msp.c;main.c;
 

@@ -29,7 +29,10 @@
 /* USER CODE BEGIN Includes */
 #include "mylcd.h"
 #include "stdio.h"
-#include "GUI.h"
+#include "GUI.h" 
+#include <stdint.h>
+#include <rthw.h>
+#include <rtthread.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -60,6 +63,14 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+
+int fputc(int ch,FILE *fp)
+{
+	return HAL_UART_Transmit(&huart1,(uint8_t *)&ch,1,1000);
+}
+
+ 
+
 void delay_us(uint16_t us)
 {
     uint16_t differ=0xffff-us-5;
@@ -112,10 +123,11 @@ void Test_Demo(void)
      /* 设置文本模式 */
      GUI_SetTextMode(GUI_TM_TRANS | GUI_TM_REV);   
      GUI_DispStringHCenterAt("GUI_TM_TRANS | GUI_TM_REV", 160, 74);
-     while (1)   
-     {
-         GUI_Delay(1000);   
-     }
+		 while(1)
+		{ 
+			HAL_GPIO_TogglePin(LED1_GPIO_Port,LED1_Pin); 
+			rt_thread_mdelay(500); 
+		} 
 }
 /* USER CODE END 0 */
 
@@ -132,38 +144,45 @@ int main(void)
   /* MCU Configuration--------------------------------------------------------*/
 
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-  HAL_Init();
+  //HAL_Init();
 
   /* USER CODE BEGIN Init */
 
   /* USER CODE END Init */
 
   /* Configure the system clock */
-  SystemClock_Config();
+  //SystemClock_Config();
 
   /* USER CODE BEGIN SysInit */
 
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
-  MX_GPIO_Init();
-  MX_CRC_Init();
-  MX_FSMC_Init();
-  MX_USART1_UART_Init();
-  MX_TIM8_Init();
-  /* USER CODE BEGIN 2 */
+  //MX_GPIO_Init();
+  //MX_CRC_Init();
+  //MX_FSMC_Init();
+  //MX_USART1_UART_Init();
+  //MX_TIM8_Init();
+  /* USER CODE BEGIN 2 */ 
 	LCD_Init();           													//初始化LCD FSMC接口
+	
 	sprintf((char*)lcd_id,"LCD ID:%04X",lcddev.id);	//将LCD ID打印到lcd_id数组。
 	//STemWin 移植
-	//GUI_Init();
-	//GUI_Clear();
-	//GUI_SetBkColor(GUI_BLUE);
-	//GUI_SetFont(GUI_FONT_24_1);
-	//GUI_DispStringAt("hello world",0,0);
-	//GUI_DispStringAt("hello world",50,50); 
-	//GUI_DispStringAt(lcd_id,50,100);
-	Test_Demo();	//STemWin  测试代码
+	GUI_Init(); 
+	GUI_Clear();
 	
+	GUI_SetBkColor(GUI_BLUE);
+	
+	GUI_SetFont(GUI_FONT_24_1);
+	GUI_SetColor(GUI_GREEN);
+	GUI_DrawLine(10,20,30,40);
+	GUI_DispString("hello world"); 
+	GUI_DispStringAt("hello world",50,50);  
+	GUI_DispStringAt(lcd_id,50,100);
+	
+
+	//Test_Demo();	//STemWin  测试代码
+	 
 	//原始的TFT驱动
 	//POINT_COLOR=RED;     					//画笔颜色：红色
 	//sprintf((char*)lcd_id,"LCD ID:%04X",lcddev.id);//将LCD ID打印到lcd_id数组。
@@ -183,8 +202,20 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
+
+    /* USER CODE BEGIN 3 */ 
+		 
+		HAL_GPIO_TogglePin(LED0_GPIO_Port,LED0_Pin);
+		//修复出现Emwin的字符串输出时串口驱动不正常的现象，进行重新初始化串口。
+		HAL_UART_DeInit(&huart1);
+		MX_USART1_UART_Init();
 		
-    /* USER CODE BEGIN 3 */
+		rt_kprintf("\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
+		rt_kprintf("HELLO RT-THREAD Nano!\n");
+		rt_kprintf("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
+		 
+    rt_thread_mdelay(500);
+
   }
   /* USER CODE END 3 */
 }
