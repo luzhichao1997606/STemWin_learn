@@ -170,7 +170,7 @@ int main(void)
 	//STemWin 移植
 	GUI_Init(); 
 	GUI_Clear();
-	
+	GUI_Exec(); //解决GUI_Delay失效问题！
 	GUI_SetBkColor(GUI_BLUE);
 	
 	GUI_SetFont(GUI_FONT_24_1);
@@ -213,8 +213,10 @@ int main(void)
 		rt_kprintf("\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
 		rt_kprintf("HELLO RT-THREAD Nano!\n");
 		rt_kprintf("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
-		 
-    rt_thread_mdelay(500);
+		
+		
+		GUI_Exec(); 
+    rt_thread_mdelay(400);
 
   }
   /* USER CODE END 3 */

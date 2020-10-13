@@ -18,6 +18,8 @@
 #include "usart.h"
 #include "gpio.h"
 #include "fsmc.h"
+#include "GUI.h"
+  
 
 #define _SCB_BASE       (0xE000E010UL)
 #define _SYSTICK_CTRL   (*(rt_uint32_t *)(_SCB_BASE + 0x0))
@@ -34,7 +36,7 @@ extern void SystemCoreClockUpdate(void);
 // frequency supplied to the SysTick timer and the processor 
 // core clock.
 extern uint32_t SystemCoreClock;
-
+extern volatile GUI_TIMER_TIME OS_TimeMS;
 static uint32_t _SysTick_Config(rt_uint32_t ticks)
 {
     if ((ticks - 1) > 0xFFFFFF)
@@ -98,6 +100,9 @@ void rt_hw_board_init()
 
 void SysTick_Handler(void)
 {
+	
+		
+    ++OS_TimeMS ;
 	
 		HAL_IncTick();
     /* enter interrupt */
